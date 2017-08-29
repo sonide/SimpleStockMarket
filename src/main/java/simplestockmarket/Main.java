@@ -53,8 +53,8 @@ public class Main {
 				System.out.println(stock.getSymbol() + " P/E Ratio: " + sas.getPE_Ratio(stock, stock.getPrice()));
 				System.out.println(stock.getSymbol() + " volumeWeightedStockPrice: " + sas.get15MinutesVWAP(stock));
 			}
-			BigDecimal GBCEallShareIndex = sas.getGBCEAllStockIndex();
-			System.out.println("GBCE All Share Index:" + GBCEallShareIndex);
+			BigDecimal gbceAllShareIndex = sas.getGBCEAllStockIndex();
+			System.out.println("GBCE All Share Index:" + gbceAllShareIndex);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
