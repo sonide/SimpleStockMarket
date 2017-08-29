@@ -45,7 +45,7 @@ public class TradeManager {
 		//Update Stock Price for the registered trade. 
 		stock.setPrice(price);
 		
-		tradeCache.put(timestamp, new Trade(stock, timestamp, qty , Side.BUY,price));
+		tradeCache.put(timestamp, new Trade(stock, timestamp, qty ,side,price));
 		return timestamp;
 	}
 	

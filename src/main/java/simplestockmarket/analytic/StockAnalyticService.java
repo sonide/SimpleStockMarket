@@ -76,7 +76,7 @@ public class StockAnalyticService {
 		case COMMON:
 			return stock.getLastDividend().setScale(PRECISION, BigDecimal.ROUND_HALF_EVEN);
 		case PREFERRED:
-			return stock.getFixedDividendPct().divide(new BigDecimal(100.0,MATH_CTX))
+			return stock.getFixedDividendPct().divide(BigDecimal.valueOf(100.0),MATH_CTX)
 					.multiply(stock.getParValue()).setScale(PRECISION, BigDecimal.ROUND_HALF_EVEN);
 		default:
 			return BigDecimal.ZERO;
@@ -123,8 +123,7 @@ public class StockAnalyticService {
 				.map(stk -> stk.getPrice().doubleValue())
 				.collect(Collectors.toList());
 		
-		BigDecimal gbce= new BigDecimal(this.getGeometricMean(stockPriceList)).setScale(PRECISION, BigDecimal.ROUND_HALF_EVEN);
-		return gbce;
+		return BigDecimal.valueOf(this.getGeometricMean(stockPriceList)).setScale(PRECISION, BigDecimal.ROUND_HALF_EVEN);
  	}
 	
 	/**
@@ -135,14 +134,12 @@ public class StockAnalyticService {
 	public double getGeometricMean(List<Double> numbers){
 		double accumulate = 0;
 		for(double price:numbers){
-			if(price<= 0.0){
-				return 0.0;
-			}else if(price >= Double.POSITIVE_INFINITY){
+			if(price<= 0.0 ||price >= Double.POSITIVE_INFINITY){
 				return 0.0;
 			}
 			accumulate=accumulate+Math.log(price);
 		}
-        accumulate= new BigDecimal(accumulate).divide(new BigDecimal(numbers.size()), MATH_CTX).doubleValue();
+        accumulate= BigDecimal.valueOf(accumulate).divide(BigDecimal.valueOf(numbers.size()), MATH_CTX).doubleValue();
         
         return Math.exp(accumulate);
 	}
