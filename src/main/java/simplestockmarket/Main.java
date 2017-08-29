@@ -6,6 +6,7 @@ package simplestockmarket;
 import java.math.BigDecimal;
 import java.util.Random;
 
+import simplestockmarket.analytic.IStockAnalyticService;
 import simplestockmarket.analytic.StockAnalyticService;
 import simplestockmarket.data.Side;
 import simplestockmarket.data.StockType;
@@ -32,7 +33,7 @@ public class Main {
 	public static void main(String[] args) throws InterruptedException {
 			StockManager stkMgr = new StockManager();
 			TradeManager trdMgr = new TradeManager();
-			StockAnalyticService sas = new StockAnalyticService(trdMgr, stkMgr);
+			IStockAnalyticService sas = new StockAnalyticService(trdMgr, stkMgr);
 			Main.loadSampleData(stkMgr);
 		
 			for (Stock stock :stkMgr.getAllStocks()) {

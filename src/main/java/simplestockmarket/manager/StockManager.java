@@ -7,6 +7,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import simplestockmarket.model.Stock;
 
+/**
+ * This class will keep record for all stocks and manage them via in memory cache
+ * 
+ * @author sonid
+ *
+ */
 public class StockManager {
 	private Map<String, Stock> stockCache = new ConcurrentHashMap<>();
 

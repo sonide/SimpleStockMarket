@@ -14,10 +14,12 @@ import simplestockmarket.model.Stock;
 import simplestockmarket.model.Trade;
 
 /**
+ * This class will provide an interface for all the stock analytics 
+ * 
  * @author sonid
  *
  */
-public class StockAnalyticService {
+public class StockAnalyticService implements IStockAnalyticService{
 	/**
 	 * Assumption: 
 	 * The precision of 5 is used in the calculation.
@@ -107,6 +109,8 @@ public class StockAnalyticService {
 	}
 	
 	/**
+	 * Builds the GBCE All Stock Index using GEeometric Mean of Prices of all stocks
+	 * 
 	 * @return
 	 */
 	public BigDecimal getGBCEAllStockIndex() {

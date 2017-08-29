@@ -37,7 +37,7 @@ public class TradeManager {
 	 * @param qty
 	 * @param side
 	 * @param price
-	 * @return The timestamp of the Trade just Stored.
+	 * @return timestamp of the Trade just Stored.
 	 */
 	public long storeTrade(Stock stock,long qty, Side side, BigDecimal price){
 		long timestamp=System.currentTimeMillis();
@@ -51,11 +51,11 @@ public class TradeManager {
 	
 	/**
 	 * Returns the {@link Trade} for the timestamp else null;
-	 * @param timestamp
+	 * @param tradeId
 	 * @return trade 
 	 */
-	public Trade getTrade(long timestamp){
-		return tradeCache.get(timestamp);
+	public Trade getTrade(long tradeId){
+		return tradeCache.get(tradeId);
 	}
 	
 	/**
