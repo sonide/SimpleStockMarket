@@ -59,7 +59,7 @@ public class StockAnalyticService {
 	 * @param price
 	 * @return
 	 */
-	public BigDecimal getPE_Ratio(Stock stock, BigDecimal price){
+	public BigDecimal getPERatio(Stock stock, BigDecimal price){
 		BigDecimal dividend= this.getDividend(stock);
 		
 		if(BigDecimal.ZERO.compareTo(dividend)>=0||BigDecimal.ZERO.compareTo(price) >= 0){
@@ -97,17 +97,13 @@ public class StockAnalyticService {
 		long time15Minutesback=currentTime - MINUTES_15;
 		
 		Collection<Trade> trades=tradeCache.getRecentTrades(time15Minutesback);
-		if(trades.isEmpty()){
-			//No Trades have been executed in last 15 minutes
-			return BigDecimal.ZERO;
-		}
 		
-		BigDecimal[] values=trades.stream().filter(trd->trd.getStock().getSymbol().equals(stock.getSymbol()))
-		.map(trd -> new BigDecimal[]{trd.getPrice().multiply(new BigDecimal(trd.getQuantity())), new BigDecimal(trd.getQuantity())})
-		.reduce((x, y) -> new BigDecimal[]{x[0].add(y[0]), x[1].add(y[1])})
-		.get();
+		return trades.stream()
+				.filter(trd->trd.getStock().getSymbol().equals(stock.getSymbol()))
+				.map(trd -> new BigDecimal[]{trd.getPrice().multiply(BigDecimal.valueOf(trd.getQuantity())), BigDecimal.valueOf(trd.getQuantity())})
+				.reduce((x, y) -> new BigDecimal[]{x[0].add(y[0]), x[1].add(y[1])})
+		        .map(x-> x[0].divide(x[1],MATH_CTX).setScale(PRECISION, BigDecimal.ROUND_HALF_EVEN)).orElse(BigDecimal.ZERO);
 		
-		return values[0].divide(values[1],MATH_CTX).setScale(PRECISION, BigDecimal.ROUND_HALF_EVEN);
 	}
 	
 	/**

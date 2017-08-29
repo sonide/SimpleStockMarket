@@ -53,7 +53,7 @@ public class StockAnalyticServiceTest {
 		Stock stock=stkMgr.getStock(TestUtil.getCommonTestStock().getSymbol());
 		stock.setLastDividend(BigDecimal.ZERO);
 		
-		assertEquals(BigDecimal.ZERO.doubleValue(), sas.getDividendYield(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(BigDecimal.ZERO.doubleValue(), sas.getDividendYield(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	@Test
@@ -61,7 +61,7 @@ public class StockAnalyticServiceTest {
 		Stock stock=stkMgr.getStock(TestUtil.getCommonTestStock().getSymbol());
 		stock.setLastDividend(BigDecimal.TEN);
 		
-		assertEquals(1.0, sas.getDividendYield(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(1.0, sas.getDividendYield(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class StockAnalyticServiceTest {
 		Stock stock=stkMgr.getStock(TestUtil.getPreferredTestStock().getSymbol());
 		stock.setFixedDividendPct(BigDecimal.ZERO);
 		
-		assertEquals(BigDecimal.ZERO.doubleValue(), sas.getDividendYield(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(BigDecimal.ZERO.doubleValue(), sas.getDividendYield(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	@Test
@@ -77,7 +77,7 @@ public class StockAnalyticServiceTest {
 		Stock stock=stkMgr.getStock(TestUtil.getPreferredTestStock().getSymbol());
 		stock.setFixedDividendPct(BigDecimal.TEN);
 		
-		assertEquals(0.1, sas.getDividendYield(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(0.1, sas.getDividendYield(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	// PE_Ratio 
@@ -87,7 +87,7 @@ public class StockAnalyticServiceTest {
 		Stock stock=stkMgr.getStock(TestUtil.getCommonTestStock().getSymbol());
 		stock.setLastDividend(BigDecimal.ZERO);
 		
-		assertEquals(BigDecimal.ZERO.doubleValue(), sas.getPE_Ratio(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(BigDecimal.ZERO.doubleValue(), sas.getPERatio(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	@Test
@@ -95,7 +95,7 @@ public class StockAnalyticServiceTest {
 		Stock stock=stkMgr.getStock(TestUtil.getCommonTestStock().getSymbol());
 		stock.setLastDividend(BigDecimal.TEN);
 		
-		assertEquals(1.0, sas.getPE_Ratio(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(1.0, sas.getPERatio(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	@Test
@@ -103,15 +103,15 @@ public class StockAnalyticServiceTest {
 		Stock stock=stkMgr.getStock(TestUtil.getPreferredTestStock().getSymbol());
 		stock.setFixedDividendPct(BigDecimal.ZERO);
 		
-		assertEquals(BigDecimal.ZERO.doubleValue(), sas.getPE_Ratio(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(BigDecimal.ZERO.doubleValue(), sas.getPERatio(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	@Test
 	public void testGetPE_Ratio_NegativeFixedDivided_Preferred(){
 		Stock stock=stkMgr.getStock(TestUtil.getPreferredTestStock().getSymbol());
-		stock.setFixedDividendPct(new BigDecimal(-10.0));
+		stock.setFixedDividendPct(BigDecimal.valueOf(-10.0));
 		
-		assertEquals(0.0, sas.getPE_Ratio(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(0.0, sas.getPERatio(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	
@@ -120,7 +120,7 @@ public class StockAnalyticServiceTest {
 		Stock stock=stkMgr.getStock(TestUtil.getPreferredTestStock().getSymbol());
 		stock.setFixedDividendPct(BigDecimal.TEN);
 		
-		assertEquals(10.0, sas.getPE_Ratio(stock, new BigDecimal(10.0)).doubleValue(), DELTA);
+		assertEquals(10.0, sas.getPERatio(stock, BigDecimal.valueOf(10.0)).doubleValue(), DELTA);
 	}
 	
 	
@@ -131,9 +131,9 @@ public class StockAnalyticServiceTest {
 		Stock stock = TestUtil.getCommonTestStock();
 		try {
 			for (int i = 1; i <= 5; i++) {
-				trdMgr.storeTrade(stock, 10 * i, Side.BUY, new BigDecimal(i));
+				trdMgr.storeTrade(stock, 10 * i, Side.BUY, BigDecimal.valueOf(i));
 				Thread.sleep(10);
-				trdMgr.storeTrade(stock, 10 * i, Side.SELL, new BigDecimal(i));
+				trdMgr.storeTrade(stock, 10 * i, Side.SELL, BigDecimal.valueOf(i));
 				Thread.sleep(10);
 			}
 		} catch (InterruptedException e) {
@@ -149,21 +149,30 @@ public class StockAnalyticServiceTest {
 		assertEquals(0.0, sas.get15MinutesVWAP(stock).doubleValue(), DELTA);
 	}
 	
+	@Test
+	public void testGet15MinutesVWAP_No_TradesForTheStock() {
+		
+		Stock stock = TestUtil.getCommonTestStock();
+		trdMgr.storeTrade(stock, 10l, Side.BUY, BigDecimal.valueOf(100));
+			
+		assertEquals(0.0, sas.get15MinutesVWAP(TestUtil.getPreferredTestStock()).doubleValue(), DELTA);
+	}
+	
 	
 	@Test
 	public void testGet15MinutesVWAP_Trades_WithZeroQty() {
 		Stock stock = TestUtil.getCommonTestStock();
 		try {
 			for (int i = 1; i <= 5; i++) {
-				trdMgr.storeTrade(stock, 10 * i, Side.BUY, new BigDecimal(i));
+				trdMgr.storeTrade(stock, 10 * i, Side.BUY, BigDecimal.valueOf(i));
 				Thread.sleep(10);
-				trdMgr.storeTrade(stock, 10 * i, Side.SELL, new BigDecimal(i));
+				trdMgr.storeTrade(stock, 10 * i, Side.SELL, BigDecimal.valueOf(i));
 				Thread.sleep(10);
 			}
 		} catch (InterruptedException e) {
 		}
 		
-		trdMgr.storeTrade(stock, 0, Side.BUY, new BigDecimal(10));
+		trdMgr.storeTrade(stock, 0, Side.BUY, BigDecimal.valueOf(10));
 		assertEquals(3.6667, sas.get15MinutesVWAP(stock).doubleValue(), DELTA);
 	}
 	//getGBCEAllStockIndex
@@ -174,9 +183,9 @@ public class StockAnalyticServiceTest {
 		try {
 			for(Stock stock: stkMgr.getAllStocks()){
 				for (int i = 1; i <= 3; i++) {
-					trdMgr.storeTrade(stock, 10 * i, Side.BUY, new BigDecimal(i));
+					trdMgr.storeTrade(stock, 10 * i, Side.BUY, BigDecimal.valueOf(i));
 					Thread.sleep(10);
-					trdMgr.storeTrade(stock, 10 * i, Side.SELL, new BigDecimal(i));
+					trdMgr.storeTrade(stock, 10 * i, Side.SELL, BigDecimal.valueOf(i));
 					Thread.sleep(10);
 				}
 			}

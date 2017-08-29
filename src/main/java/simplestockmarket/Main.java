@@ -29,8 +29,7 @@ public class Main {
         stkMgr.storeStock("JOE", new Stock("JOE", StockType.COMMON, BigDecimal.valueOf(13.0), BigDecimal.ZERO, BigDecimal.valueOf(250.0),BigDecimal.valueOf(100.0)));
     }
 
-	public static void main(String[] args) {
-		try {
+	public static void main(String[] args) throws InterruptedException {
 			StockManager stkMgr = new StockManager();
 			TradeManager trdMgr = new TradeManager();
 			StockAnalyticService sas = new StockAnalyticService(trdMgr, stkMgr);
@@ -50,13 +49,10 @@ public class Main {
 				}
 				System.out.println(stock.getSymbol() + " price: " + stock.getPrice().setScale(5, BigDecimal.ROUND_HALF_EVEN));
 				System.out.println(stock.getSymbol() + " Divided Yield: " + sas.getDividendYield(stock, stock.getPrice()));
-				System.out.println(stock.getSymbol() + " P/E Ratio: " + sas.getPE_Ratio(stock, stock.getPrice()));
+				System.out.println(stock.getSymbol() + " P/E Ratio: " + sas.getPERatio(stock, stock.getPrice()));
 				System.out.println(stock.getSymbol() + " volumeWeightedStockPrice: " + sas.get15MinutesVWAP(stock));
 			}
 			BigDecimal gbceAllShareIndex = sas.getGBCEAllStockIndex();
 			System.out.println("GBCE All Share Index:" + gbceAllShareIndex);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 }

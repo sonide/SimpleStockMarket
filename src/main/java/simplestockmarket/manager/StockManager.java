@@ -10,20 +10,18 @@ import simplestockmarket.model.Stock;
 public class StockManager {
 	private Map<String, Stock> stockCache = new ConcurrentHashMap<>();
 
-	public boolean storeStock(String symbol, Stock stock) {
-		return stockCache.put(symbol, stock) != null;
+	public void storeStock(String symbol, Stock stock) {
+		if(null!=symbol){
+			stockCache.put(symbol, stock);
+		}
 	}
 
 	public Stock getStock(String symbol) {
-		return stockCache.get(symbol);
+		return null!=symbol?stockCache.get(symbol):null;
 	}
 
 	public boolean isCacheEmpty() {
 		return stockCache.isEmpty();
-	}
-	
-	public Map<String, Stock> getCache(){
-		return Collections.unmodifiableMap(stockCache);
 	}
 	
 	public Collection<Stock> getAllStocks(){
